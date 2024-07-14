@@ -1,0 +1,9 @@
+services:
+  frontend:
+    build: .
+    volumes:
+      - ./:/usr/src/app
+    command: sh -c 'cd app && PORT=9000  yarn start'
+    ports:
+      - 9000:9000
+    tty: true
