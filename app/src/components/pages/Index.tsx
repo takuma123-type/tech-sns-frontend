@@ -1,11 +1,11 @@
 import React from "react";
-import Header from "../molecules/Header";
+import IconHeader from "../organism/IconHeader";
 
 export default function Index() {
   return (
     <React.Fragment>
       <>
-      <Header />
+      <IconHeader />
       </>
     </React.Fragment>
   );
