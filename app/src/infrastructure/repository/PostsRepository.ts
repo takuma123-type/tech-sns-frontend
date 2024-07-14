@@ -12,13 +12,7 @@ export class PostsRepository {
           "X-Requested-With": "XMLHttpRequest",
         },
       });
-
-      console.log('Repository fetched response:', response); // デバッグ用ログ
-      console.log('Response status:', response.status); // デバッグ用ログ
-      console.log('Response data:', response.data); // デバッグ用ログ
-
       if (response.status === 200) {
-        // ここでレスポンスデータを期待する形式に変換します
         return { results: response.data };
       } else {
         console.warn('Non-200 status code:', response.status);

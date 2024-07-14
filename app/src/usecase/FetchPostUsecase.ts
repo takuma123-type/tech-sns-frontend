@@ -19,13 +19,9 @@ export class FetchPostsUsecase {
   async fetch(): Promise<FetchPostsOutput> {
     try {
       const response = await this.postsRepository.fetch();
-      console.log('Fetched response:', response); // デバッグ用ログ
-
       if (!response.results || response.results.length === 0) {
-        console.error('No results found in the response', response); // デバッグ用ログ
         throw new Error('No results found in the response');
       }
-
       const posts = response.results.map(
         (post: any) =>
           new PostItem({
@@ -36,9 +32,6 @@ export class FetchPostsUsecase {
             content: post.content,
           })
       );
-
-      console.log('Mapped posts:', posts); // デバッグ用ログ
-
       return new FetchPostsOutput({
         posts: posts || [],
       });
