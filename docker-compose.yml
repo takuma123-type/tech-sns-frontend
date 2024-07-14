@@ -1,6 +1,7 @@
 services:
   frontend:
     build: .
+    env_file: app/src/app.env
     volumes:
       - ./:/usr/src/app
     command: sh -c 'cd app && PORT=9000  yarn start'
