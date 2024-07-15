@@ -23,4 +23,24 @@ export class PostsRepository {
       return { results: [] };
     }
   }
+
+  async get(code: string): Promise<{ post: PostItem }> {
+    try {
+      const response = await axios.get(API.createURL(API.URL.post(code)), {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      });
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        console.warn('Non-200 status code:', response.status);
+        throw new Error('Non-200 status code');
+      }
+    } catch (error) {
+      console.error('Error in PostsRepository get:', error);
+      throw error;
+    }
+  }
 }
