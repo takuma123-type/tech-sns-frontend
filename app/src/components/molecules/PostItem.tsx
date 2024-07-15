@@ -6,6 +6,7 @@ interface PostItemProps {
   name: string;
   tags: string[];
   content: string;
+  onClick: () => void;
 }
 
 export const PostItemComponent: React.FC<PostItemProps> = ({
@@ -14,9 +15,13 @@ export const PostItemComponent: React.FC<PostItemProps> = ({
   name,
   tags,
   content,
+  onClick,
 }) => {
   return (
-    <div className="w-full max-w-lg bg-white shadow-md rounded-md overflow-hidden mt-4 p-6 flex items-start space-x-4">
+    <div
+      className="w-full max-w-lg bg-white shadow-md rounded-md overflow-hidden mt-4 p-6 flex items-start space-x-4 cursor-pointer"
+      onClick={onClick}
+    >
       <img
         className="w-16 h-16 rounded-full object-cover border-2 border-teal-500"
         src={avatar_url || "/images/noimage.jpg"}
