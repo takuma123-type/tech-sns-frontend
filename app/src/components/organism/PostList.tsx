@@ -1,9 +1,9 @@
 import React from "react";
-import { PostItem } from "../../models/presentation/PostItem";
+import { PostItemWithIsNew } from "../../models/presentation/PostItem";
 import { PostItemComponent } from "../molecules/PostItem";
 
 interface PostListProps {
-  posts: PostItem[];
+  posts: PostItemWithIsNew[];
   onPostClick: (code: string) => void;
 }
 
@@ -12,13 +12,14 @@ const PostListMemo: React.FC<PostListProps> = ({ posts, onPostClick }) => {
     <div className="flex flex-col items-center space-y-3 sm:space-y-3 md:space-y-4 lg:space-y-6 px-3 sm:px-6 lg:px-12 w-full">
       {posts.map((post) => (
         <PostItemComponent
-          key={post.code}
+          key={post.code} // 一意のキーを設定
           code={post.code}
           avatar_url={post.avatar_url}
           name={post.name}
           tags={post.tags}
           content={post.content}
           onClick={() => onPostClick(post.code)}
+          isNew={post.isNew} // 新しい投稿かどうかのフラグを渡す
         />
       ))}
     </div>

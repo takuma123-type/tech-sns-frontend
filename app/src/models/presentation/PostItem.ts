@@ -6,7 +6,7 @@ export class PostItem {
   readonly content: string;
 
   constructor(params: {
-    code: string
+    code: string;
     avatar_url: string;
     name: string;
     tags: string[];
@@ -18,4 +18,9 @@ export class PostItem {
     this.tags = params.tags;
     this.content = params.content;
   }
+}
+
+// PostItemにisNewプロパティを追加した新しい型
+export interface PostItemWithIsNew extends PostItem {
+  isNew?: boolean;
 }

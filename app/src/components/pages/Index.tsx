@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { FetchPostsUsecase } from '../../usecase/FetchPostUsecase';
 import { PostsRepository } from '../../infrastructure/repository/PostsRepository';
-import { PostItem } from '../../models/presentation/PostItem';
+import { PostItem, PostItemWithIsNew } from '../../models/presentation/PostItem';
 import IconHeader from '../organism/IconHeader';
 import { PostList } from '../organism/PostList';
 import MobileFooter from '../organism/MobileFooter';
 import { Modal } from '../organism/Modal';
 import { GetPostUsecase } from '../../usecase/GetPostUsecase';
 import { createPostsSubscription } from '../../infrastructure/cable';
+import '../../styles/animations.css'; // アニメーションCSSをインポート
 
 const Index: React.FC = () => {
-  const [posts, setPosts] = useState<PostItem[]>([]);
+  const [posts, setPosts] = useState<PostItemWithIsNew[]>([]);
   const [selectedPost, setSelectedPost] = useState<PostItem | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [reconnecting, setReconnecting] = useState(false);
@@ -56,13 +57,14 @@ const Index: React.FC = () => {
       received(data) {
         console.log('Received data in component:', data);
         const parsedData = JSON.parse(data.post);
-        const newPost = new PostItem({
+        const newPost: PostItemWithIsNew = new PostItem({
           code: parsedData.code,
           avatar_url: parsedData.avatar_url,
           name: parsedData.name,
           tags: parsedData.tags,
           content: parsedData.content,
         });
+        newPost.isNew = true; // 新しい投稿にフラグを付ける
         setPosts((prevPosts) => [newPost, ...prevPosts]);
       },
       rejected() {

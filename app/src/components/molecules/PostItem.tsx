@@ -7,6 +7,7 @@ interface PostItemProps {
   tags: string[];
   content: string;
   onClick: () => void;
+  isNew?: boolean; // 新しい投稿かどうかのフラグ
 }
 
 export const PostItemComponent: React.FC<PostItemProps> = ({
@@ -16,10 +17,13 @@ export const PostItemComponent: React.FC<PostItemProps> = ({
   tags,
   content,
   onClick,
+  isNew = false, // デフォルトはfalse
 }) => {
   return (
     <div
-      className="w-full max-w-lg bg-white shadow-md rounded-md overflow-hidden mt-4 p-6 flex items-start space-x-4 cursor-pointer"
+      className={`w-full max-w-lg bg-white shadow-md rounded-md overflow-hidden mt-4 p-6 flex items-start space-x-4 cursor-pointer ${
+        isNew ? 'fade-in' : ''
+      }`}
       onClick={onClick}
     >
       <img
