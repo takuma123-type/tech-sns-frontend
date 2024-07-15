@@ -12,3 +12,4 @@ export class FailCreateJobSeekerError extends Error {}
 export class FailGetUserIconPresignedUrlError extends Error{}
 export class FailSignInError extends Error{}
 export class FailCreateOldGirlError extends Error{}
+export class FailUpdateProfileError extends Error{}

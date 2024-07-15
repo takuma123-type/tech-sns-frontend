@@ -5,6 +5,7 @@ import SignIn from './components/pages/SignIn';
 import SignUp from './components/pages/SignUp';
 import { Search } from './components/pages/Search';
 import { Post } from './components/pages/Post';
+import ProfileRegistration  from './components/pages/ProfileRegistration';
 
 function App(): JSX.Element {
   return (
@@ -15,6 +16,7 @@ function App(): JSX.Element {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/search" element={<Search />} />
         <Route path="/post" element={<Post />} />
+        <Route path="/profile-registration" element={<ProfileRegistration />} />
       </Routes>
     </Router>
   );

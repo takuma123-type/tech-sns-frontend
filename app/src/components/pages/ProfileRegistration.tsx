@@ -3,32 +3,35 @@ import IconHeader from "../organism/IconHeader";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../organism/Footer";
 import BackButton from "../atoms/BackButton";
-import { SignUpInput, SignUpUsecase } from "../../usecase/SignUpUsecase";
+import { UpdateProfileInput, UpdateProfileUsecase } from "../../usecase/UpdateProfileUsecase";
 import { SessionsRepository } from "../../infrastructure/repository/SessionsRepository";
 
-export default function SignUp() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default function ProfileRegistration() {
+  const [name, setName] = useState("");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [description, setDescription] = useState("");
   const navigate = useNavigate();
 
-  const handleSignUp = async () => {
-    const input = new SignUpInput({ email, password });
+  const handleUpdateProfile = async () => {
+    const input = new UpdateProfileInput({ name, avatar: avatarFile, description });
     const sessionsRepository = new SessionsRepository();
-    const signUpUsecase = new SignUpUsecase(input, sessionsRepository);
+    const updateProfileUsecase = new UpdateProfileUsecase(input, sessionsRepository);
 
     try {
-      const result = await signUpUsecase.sign_up();
-      const token = result.token;
-      if (token) {
-        localStorage.setItem("authToken", token);
-        alert("サインアップに成功しました！");
-        navigate("/profile-registration");
-      } else {
-        alert("トークンの取得に失敗しました。");
-      }
+      const result = await updateProfileUsecase.update_profile();
+      const token = result.token; // プロフィール更新成功時のトークンを取得
+      localStorage.setItem("authToken", token); // トークンをローカルストレージに保存
+      alert("プロフィールの更新に成功しました！");
+      navigate("/"); // プロフィール画面に遷移
     } catch (error) {
-      alert("サインアップに失敗しました。再度お試しください。");
+      alert("プロフィールの更新に失敗しました。再度お試しください。");
       console.error(error);
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setAvatarFile(event.target.files[0]);
     }
   };
 
@@ -43,9 +46,9 @@ export default function SignUp() {
               <div className="flex justify-center">
                 <img className="w-1/3" src="/images/soeur_logo.png" alt="" />
               </div>
-              <div className="flex justify-center">
+              <div className="flex justifycenter">
                 <div className="text-center text-xl font-bold ml-4">
-                  新規登録
+                  プロフィール更新
                 </div>
               </div>
               <form onSubmit={(e) => e.preventDefault()}>
@@ -54,32 +57,42 @@ export default function SignUp() {
                     <div className="w-full">
                       <div className="relative">
                         <div className="text-gray-700 text-xs font-bold">
-                          メールアドレス
+                          名前
                         </div>
                         <input
                           type="text"
-                          id="email"
+                          id="name"
                           className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent mt-2"
-                          placeholder="メールアドレス"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          autoComplete="email"
+                          placeholder="名前"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
                         />
                       </div>
                     </div>
                     <div className="w-full">
                       <div className="relative">
                         <div className="text-gray-700 text-xs font-bold">
-                          パスワード
+                          アバター
                         </div>
                         <input
-                          type="password"
-                          id="password"
+                          type="file"
+                          id="avatarFile"
                           className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent mt-2"
-                          placeholder="パスワード"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          autoComplete="current-password"
+                          onChange={handleFileChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full">
+                      <div className="relative">
+                        <div className="text-gray-700 text-xs font-bold">
+                          説明
+                        </div>
+                        <textarea
+                          id="description"
+                          className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent mt-2"
+                          placeholder="説明"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
                         />
                       </div>
                     </div>
@@ -87,37 +100,10 @@ export default function SignUp() {
                       <button
                         type="button"
                         className="flex justify-center mx-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                        onClick={handleSignUp}
+                        onClick={handleUpdateProfile}
                       >
-                        登録
+                        更新
                       </button>
-                    </div>
-                    <div className="flex justify-center">
-                      <div className="flex items-center mb-4">
-                        <label
-                          htmlFor="default-checkbox"
-                          className="ms-2 text-[12px] font-medium text-textGrayLight"
-                        >
-                          <Link to="/" className="text-blue-500 font-bold">
-                            利用規約
-                          </Link>
-                          および
-                          <Link to="/" className="text-blue-500 font-bold">
-                            プライバシーポリシー
-                          </Link>
-                          に同意の上、ログインへお進みください。
-                        </label>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <Link to="/" className="text-blue-500 font-bold">
-                        ログインはこちら
-                      </Link>
-                    </div>
-                    <div className="text-right">
-                      <Link to="/" className="text-blue-500 font-bold">
-                        パスワードをお忘れの方はこちら
-                      </Link>
                     </div>
                   </div>
                 </div>
