@@ -7,11 +7,13 @@ import { PostList } from '../organism/PostList';
 import MobileFooter from '../organism/MobileFooter';
 import { Modal } from '../organism/Modal';
 import { GetPostUsecase } from '../../usecase/GetPostUsecase';
+import { createPostsSubscription } from '../../infrastructure/cable';
 
 const Index: React.FC = () => {
   const [posts, setPosts] = useState<PostItem[]>([]);
   const [selectedPost, setSelectedPost] = useState<PostItem | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [reconnecting, setReconnecting] = useState(false);
 
   const fetchData = async () => {
     const postsRepository = new PostsRepository();
@@ -35,8 +37,49 @@ const Index: React.FC = () => {
     }
   };
 
+  const setupSubscription = () => {
+    const subscription = createPostsSubscription({
+      connected() {
+        console.log('WebSocket connected to PostsChannel in component');
+        setReconnecting(false);
+      },
+      disconnected() {
+        console.log('WebSocket disconnected from PostsChannel in component');
+        if (!reconnecting) {
+          setReconnecting(true);
+          setTimeout(() => {
+            console.log('Attempting to reconnect...');
+            setupSubscription();
+          }, 3000); // 3秒後に再接続を試みる
+        }
+      },
+      received(data) {
+        console.log('Received data in component:', data);
+        const parsedData = JSON.parse(data.post);
+        const newPost = new PostItem({
+          code: parsedData.code,
+          avatar_url: parsedData.avatar_url,
+          name: parsedData.name,
+          tags: parsedData.tags,
+          content: parsedData.content,
+        });
+        setPosts((prevPosts) => [newPost, ...prevPosts]);
+      },
+      rejected() {
+        console.error('WebSocket connection rejected');
+      },
+    });
+
+    return subscription;
+  };
+
   useEffect(() => {
     fetchData();
+    const subscription = setupSubscription();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handlePostClick = (code: string) => {
