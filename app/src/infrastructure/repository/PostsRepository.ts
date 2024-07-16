@@ -24,7 +24,13 @@ export class PostsRepository {
     }
   }
 
-  async get(code: string): Promise<{ post: PostItem }> {
+  async get(code: string): Promise<{
+    content: string;
+    tags: string[];
+    name: string;
+    avatar_url: string;
+    code: any; post: PostItem 
+}> {
     try {
       const response = await axios.get(API.createURL(API.URL.post(code)), {
         headers: {

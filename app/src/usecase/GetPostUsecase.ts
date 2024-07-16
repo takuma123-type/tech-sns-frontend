@@ -19,15 +19,16 @@ export class GetPostUsecase {
   async get(code: string): Promise<GetPostOutput> {
     try {
       const response = await this.postsRepository.get(code);
-      if (!response || !response.post) {
+      console.log('Response from postsRepository.get:', response); // レスポンスをログに出力
+      if (!response || !response.code) {
         throw new Error('No post found in the response');
       }
       const post = new PostItem({
-        code, // Assuming code is not included in the API response
-        avatar_url: response.post.avatar_url,
-        name: response.post.name,
-        tags: response.post.tags,
-        content: response.post.content,
+        code: response.code, // APIレスポンスからcodeを取得
+        avatar_url: response.avatar_url,
+        name: response.name,
+        tags: response.tags,
+        content: response.content,
       });
       return new GetPostOutput({
         post: post,
