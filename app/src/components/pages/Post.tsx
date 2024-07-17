@@ -12,6 +12,7 @@ export const Post = () => {
   ];
 
   const handleSelect = (value: number) => {
+    console.log(`Selected value: ${value}`);
   };
 
   return (
@@ -21,7 +22,7 @@ export const Post = () => {
         <form className="form-container">
           <div className="form-group">
             <label htmlFor="large-input" className="form-label">
-              いまどうしてる？？
+              いまどうしてる？
             </label>
             <textarea
               id="large-input"
@@ -43,7 +44,7 @@ export const Post = () => {
             type="button"
             className="submit-button"
           >
-            送信
+            ポスト
           </button>
         </div>
       </div>
