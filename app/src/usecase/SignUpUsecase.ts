@@ -41,7 +41,6 @@ export class SignUpUsecase {
     if (!this.validInput(this.input)) {
       return Promise.reject(new InvalidParameterError());
     }
-    console.log(this.input);
 
     try {
       const response = await this.sessionRepository.sign_up({
@@ -55,7 +54,6 @@ export class SignUpUsecase {
 
     } catch (error) {
       if (error instanceof UnauthorizedError) {
-        console.log(error);
         throw new FailSignUpError(error.message);
       }
       return Promise.reject(new FailSignUpError());

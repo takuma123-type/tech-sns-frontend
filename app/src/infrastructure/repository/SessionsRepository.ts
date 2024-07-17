@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API } from "../API";
+import { NotFoundError, UnauthorizedError, UnknownError, BadRequestError, FailSignUpError, FailUpdateProfileError } from "./errors";
 
 export class SessionsRepository {
   async sign_up(signUpData: { email: string; password: string }): Promise<{ token: string }> {
@@ -10,15 +11,29 @@ export class SessionsRepository {
           "X-Requested-With": "XMLHttpRequest",
         },
       });
-      if (response.status === 201) { // ステータスコード201を考慮
+      if (response.status === 201) {
         return { token: response.data.token };
       } else {
         console.warn('Non-201 status code:', response.status);
         return { token: "" };
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error in SessionsRepository sign_up:', error);
-      return { token: "" };
+
+      if (axios.isAxiosError(error)) {
+        const { status } = error.response!;
+        if (status === 400) {
+          throw new BadRequestError('Invalid request');
+        } else if (status === 401) {
+          throw new UnauthorizedError('Unauthorized');
+        } else if (status === 404) {
+          throw new NotFoundError('Not Found');
+        } else {
+          throw new UnknownError('An unknown error occurred');
+        }
+      }
+
+      throw new FailSignUpError('Failed to sign up');
     }
   }
 
@@ -42,9 +57,23 @@ export class SessionsRepository {
         console.warn('Non-200 status code:', response.status);
         return { token: "" };
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error in SessionsRepository update_profile:', error);
-      return { token: "" };
+
+      if (axios.isAxiosError(error)) {
+        const { status } = error.response!;
+        if (status === 400) {
+          throw new BadRequestError('Invalid request');
+        } else if (status === 401) {
+          throw new UnauthorizedError('Unauthorized');
+        } else if (status === 404) {
+          throw new NotFoundError('Not Found');
+        } else {
+          throw new UnknownError('An unknown error occurred');
+        }
+      }
+
+      throw new FailUpdateProfileError('Failed to update profile');
     }
   }
 }

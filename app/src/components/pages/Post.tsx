@@ -12,7 +12,6 @@ export const Post = () => {
   ];
 
   const handleSelect = (value: number) => {
-    console.log('Selected value:', value);
   };
 
   return (

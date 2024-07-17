@@ -19,7 +19,6 @@ export class GetPostUsecase {
   async get(code: string): Promise<GetPostOutput> {
     try {
       const response = await this.postsRepository.get(code);
-      console.log('Response from postsRepository.get:', response); // レスポンスをログに出力
       if (!response || !response.code) {
         throw new Error('No post found in the response');
       }

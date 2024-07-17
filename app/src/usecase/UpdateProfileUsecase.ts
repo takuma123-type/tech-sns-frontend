@@ -58,7 +58,6 @@ export class UpdateProfileUsecase {
 
     } catch (error) {
       if (error instanceof UnauthorizedError) {
-        console.log(error);
         throw new FailUpdateProfileError(error.message);
       }
       return Promise.reject(new FailUpdateProfileError());
