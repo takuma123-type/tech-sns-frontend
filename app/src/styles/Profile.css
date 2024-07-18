@@ -1,0 +1,29 @@
+/* 全体のスタイルを調整 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #eef2f7;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: calc(100vh - 64px); /* ヘッダーの高さを考慮 */
+    padding-top: 80px; /* ヘッダーの高さを考慮 */
+    background-color: #eef2f7;
+  }
+  
+  .profile-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    width: 90%;
+    max-width: 500px;
+    margin: 16px auto;
+  }
+  
