@@ -37,6 +37,40 @@ export class SessionsRepository {
     }
   }
 
+  async log_in(signInData: { email: string; password: string }): Promise<{ token: string }> {
+    try {
+      const response = await axios.post(API.createURL(API.URL.log_in()), signInData, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      });
+      if (response.status === 200) {
+        return { token: response.data.token };
+      } else {
+        console.warn('Non-200 status code:', response.status);
+        return { token: "" };
+      }
+    } catch (error: unknown) {
+      console.error('Error in SessionsRepository sign_in:', error);
+
+      if (axios.isAxiosError(error)) {
+        const { status } = error.response!;
+        if (status === 400) {
+          throw new BadRequestError('Invalid request');
+        } else if (status === 401) {
+          throw new UnauthorizedError('Unauthorized');
+        } else if (status === 404) {
+          throw new NotFoundError('Not Found');
+        } else {
+          throw new UnknownError('An unknown error occurred');
+        }
+      }
+
+      throw new FailSignUpError('Failed to sign in');
+    }
+  }
+
   async update_profile(updateProfileData: FormData): Promise<{ token: string }> {
     try {
       const token = localStorage.getItem("authToken");

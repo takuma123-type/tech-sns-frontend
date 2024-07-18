@@ -5,6 +5,7 @@ export class API {
     posts: () => `${this.BASE_PATH}/posts`,
     post: (code: string) => `${this.BASE_PATH}/posts/${code}`,
     sign_up: () => `${this.BASE_PATH}/sessions/sign_up`,
+    log_in: () => `${this.BASE_PATH}/sessions/log_in`,
     update_profile: () => `${this.BASE_PATH}/sessions/update_profile`,
   };
   public static createURL(url: string): string {

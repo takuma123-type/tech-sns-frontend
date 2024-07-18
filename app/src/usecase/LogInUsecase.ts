@@ -5,7 +5,7 @@ import {
 } from "../infrastructure/repository/errors";
 import { SessionsRepository } from "../infrastructure/repository/SessionsRepository";
 
-export class SignUpInput {
+export class LogInInput {
   readonly email: string;
   readonly password: string;
 
@@ -15,7 +15,7 @@ export class SignUpInput {
   }
 }
 
-export class SignUpOutput {
+export class LogInOutput {
   readonly token: string;
 
   constructor(params: { token: string }) {
@@ -23,31 +23,31 @@ export class SignUpOutput {
   }
 }
 
-export class SignUpUsecase {
-  readonly input: SignUpInput;
+export class LogInUsecase {
+  readonly input: LogInInput;
   private sessionRepository: SessionsRepository;
 
   constructor(
-    input: SignUpInput,
+    input: LogInInput,
     sessionRepository: SessionsRepository
   ) {
     this.input = input;
     this.sessionRepository = sessionRepository;
   }
 
-  async sign_up(): Promise<SignUpOutput> {
+  async log_in(): Promise<LogInOutput> {
     if (!this.validInput(this.input)) {
       return Promise.reject(new InvalidParameterError());
     }
 
     try {
-      const response = await this.sessionRepository.sign_up({
+      const response = await this.sessionRepository.log_in({
         email: this.input.email,
         password: this.input.password
       });
 
       const token = response.token;
-      return new SignUpOutput({ token });
+      return new LogInOutput({ token });
 
     } catch (error) {
       if (error instanceof UnauthorizedError) {
@@ -57,7 +57,7 @@ export class SignUpUsecase {
     }
   }
 
-  private validInput(input: SignUpInput): boolean {
+  private validInput(input: LogInInput): boolean {
     return !!input.email && !!input.password;
   }
 }
