@@ -1,26 +1,31 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// app/src/App.tsx
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "./components/pages/Index";
-import SignIn from './components/pages/SignIn';
-import SignUp from './components/pages/SignUp';
-import { Search } from './components/pages/Search';
-import { Post } from './components/pages/Post';
-import ProfileRegistration  from './components/pages/ProfileRegistration';
-import Profile from './components/pages/Profile';
+import LogIn from "./components/pages/LogIn";
+import SignUp from "./components/pages/SignUp";
+import { Search } from "./components/pages/Search";
+import { Post } from "./components/pages/Post";
+import ProfileRegistration from "./components/pages/ProfileRegistration";
+import Profile from "./components/pages/Profile";
+import { AuthProvider } from "./contexts/AuthContext";
+import PrivateRoute from "./components/templates/PrivateRoute";
 
 function App(): JSX.Element {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/post" element={<Post />} />
-        <Route path="/profile-registration" element={<ProfileRegistration />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/log-in" element={<LogIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/post" element={<PrivateRoute element={<Post />} />} />
+          <Route path="/profile-registration" element={<PrivateRoute element={<ProfileRegistration />} />} />
+          <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
