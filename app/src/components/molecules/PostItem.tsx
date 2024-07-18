@@ -19,6 +19,7 @@ export const PostItemComponent: React.FC<PostItemProps> = ({
   onClick,
   isNew = false, // デフォルトはfalse
 }) => {
+
   return (
     <div
       className={`w-full max-w-lg bg-white shadow-md rounded-md overflow-hidden mt-4 p-6 flex items-start space-x-4 cursor-pointer ${

@@ -10,15 +10,12 @@ export const createPostsSubscription = (callbacks: {
 }) => {
   return cable.subscriptions.create('PostsChannel', {
     connected() {
-      console.log('WebSocket connected to PostsChannel');
       callbacks.connected();
     },
     disconnected() {
-      console.log('WebSocket disconnected from PostsChannel');
       callbacks.disconnected();
     },
     received(data) {
-      console.log('Received data:', data);
       callbacks.received(data);
     },
     rejected() {

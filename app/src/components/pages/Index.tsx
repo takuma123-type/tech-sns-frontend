@@ -41,37 +41,37 @@ const Index: React.FC = () => {
   const setupSubscription = () => {
     const subscription = createPostsSubscription({
       connected() {
-        console.log('WebSocket connected to PostsChannel in component');
         setReconnecting(false);
       },
       disconnected() {
-        console.log('WebSocket disconnected from PostsChannel in component');
         if (!reconnecting) {
           setReconnecting(true);
           setTimeout(() => {
-            console.log('Attempting to reconnect...');
             setupSubscription();
           }, 3000); // 3秒後に再接続を試みる
         }
       },
       received(data) {
-        console.log('Received data in component:', data);
-        const parsedData = JSON.parse(data.post);
+        const parsedData = JSON.parse(data.post);      
+        // userオブジェクトからnameとavatar_urlを抽出
+        const { name, avatar_data: avatar_url } = parsedData.user;
+      
         const newPost: PostItemWithIsNew = new PostItem({
           code: parsedData.code,
-          avatar_url: parsedData.avatar_url,
-          name: parsedData.name,
+          avatar_url,
+          name,
           tags: parsedData.tags,
           content: parsedData.content,
         });
         newPost.isNew = true; // 新しい投稿にフラグを付ける
+      
         setPosts((prevPosts) => [newPost, ...prevPosts]);
       },
       rejected() {
         console.error('WebSocket connection rejected');
       },
     });
-
+  
     return subscription;
   };
 
@@ -104,11 +104,19 @@ const Index: React.FC = () => {
       {selectedPost && (
         <Modal onClose={handleCloseModal}>
           <div className="p-4">
-            <img
-              className="w-16 h-16 rounded-full object-cover border-2 border-teal-500"
-              src={selectedPost.avatar_url || "/images/noimage.jpg"}
-              alt="User avatar"
-            />
+            {selectedPost.avatar_url ? (
+              <img
+                className="w-16 h-16 rounded-full object-cover border-2 border-teal-500"
+                src={selectedPost.avatar_url.startsWith("data:image") ? selectedPost.avatar_url : `data:image/jpeg;base64,${selectedPost.avatar_url}`}
+                alt="User avatar"
+              />
+            ) : (
+              <img
+                className="w-16 h-16 rounded-full object-cover border-2 border-teal-500"
+                src="/images/noimage.jpg"
+                alt="No avatar"
+              />
+            )}
             <div className="flex flex-col mt-4">
               <h3 className="text-xl text-gray-800 font-bold">{selectedPost.name}</h3>
               <div className="flex space-x-2 mt-2">

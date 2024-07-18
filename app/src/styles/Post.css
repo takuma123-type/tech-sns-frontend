@@ -1,93 +1,118 @@
-/* app/src/styles/Post.css */
+/* 全体のスタイルを調整 */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #eef2f7;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .post-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: white;
-  }
-  
-  .post-content {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 100px;
-    margin-bottom: 140px;
-  }
-  
-  .form-container {
-    max-width: 24rem;
-    width: 100%;
-    margin: auto;
-  }
-  
-  .form-group {
-    margin-bottom: 1.25rem;
-  }
-  
-  .form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #1f2937;
-  }
-  
-  .form-textarea {
-    display: block;
-    width: 100%;
-    padding: 1rem;
-    color: #1f2937;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    background-color: #f9fafb;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.3s;
-  }
-  
-  .tag-container {
-    max-width: 24rem;
-    width: 100%;
-    margin: auto;
-    margin-top: 1.25rem;
-  }
-  
-  .tag-label {
-    color: #374151;
-    font-size: 1rem;
-    font-weight: bold;
-  }
-  
-  .tag-dropdowns {
-    margin-top: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .submit-button-container {
-    max-width: 24rem;
-    width: 100%;
-    margin: auto;
-    margin-top: 1.25rem;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .submit-button {
-    color: #ffffff;
-    background-image: linear-gradient(to right, #06b6d4, #06b6d4, #0891b2);
-    box-shadow: 0 4px 6px -1px rgba(6, 182, 212, 0.5), 0 2px 4px -1px rgba(6, 182, 212, 0.5);
-    font-weight: 500;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    padding: 0.625rem 1.25rem;
-    text-align: center;
-    margin-bottom: 0.5rem;
-    outline: none;
-    transition: background-color 0.3s;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px;
+  background-color: #eef2f7;
+  min-height: 100vh;
+  padding-top: 80px; /* ヘッダーの高さを考慮 */
+}
+
+.post-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  margin: 16px auto;
+}
+
+.form-container {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-label {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #333333;
+}
+
+.form-textarea {
+  width: 100%;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 16px;
+  resize: none;
+  background-color: #f9f9f9;
+}
+
+.tag-container {
+  margin-top: 24px;
+}
+
+.tag-label {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #333333;
+}
+
+.tag-dropdowns {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ドロップダウンのスタイルを調整 */
+.dropdown-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.dropdown-select {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #333333;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><polygon points="0,0 20,0 10,10" fill="#333333"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+
+.submit-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.submit-button {
+  background-color: #007bff;
+  color: white;
+  font-size: 18px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
