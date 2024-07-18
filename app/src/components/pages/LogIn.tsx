@@ -5,12 +5,14 @@ import Footer from "../organism/Footer";
 import BackButton from "../atoms/BackButton";
 import MobileFooter from "../organism/MobileFooter";
 import { SessionsRepository } from "../../infrastructure/repository/SessionsRepository";
-import { LogInUsecase, LogInInput } from "../../usecase/LogInUsecase"; // インポート
+import { LogInUsecase, LogInInput } from "../../usecase/LogInUsecase";
+import { useAuth } from "../../hooks/useAuth"; // インポート
 
 export default function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth(); // useAuthフックを使用してlogin関数を取得
 
   const handleLogIn = async () => {
     const input = new LogInInput({ email, password });
@@ -19,6 +21,7 @@ export default function LogIn() {
 
     try {
       const output = await usecase.log_in();
+      login(); // ログイン成功時にlogin関数を呼び出して認証状態を更新
       console.log("ログイン成功");
       navigate("/");
     } catch (error) {
