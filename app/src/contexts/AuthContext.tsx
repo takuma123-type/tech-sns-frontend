@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
   currentUser: any; // 適切な型に変更してください
-  login: () => void;
+  login: (token: string) => void;
   logout: () => void;
 }
 
@@ -15,15 +15,17 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
   });
   const [currentUser, setCurrentUser] = useState<any>(null); // 適切な初期値に変更してください
 
-  const login = () => {
+  const login = (token: string) => {
     setIsAuthenticated(true);
     localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('token', token);
     setCurrentUser({ name: 'User' }); // 適切なユーザー情報に変更してください
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('token');
     setCurrentUser(null);
   };
 
