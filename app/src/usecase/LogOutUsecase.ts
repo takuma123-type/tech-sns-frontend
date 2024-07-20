@@ -5,17 +5,7 @@ import {
 } from "../infrastructure/repository/errors";
 import { SessionsRepository } from "../infrastructure/repository/SessionsRepository";
 
-export class LogInInput {
-  readonly email: string;
-  readonly password: string;
-
-  constructor(params: { email: string; password: string }) {
-    this.email = params.email;
-    this.password = params.password;
-  }
-}
-
-export class LogInOutput {
+export class LogOutInput {
   readonly token: string;
 
   constructor(params: { token: string }) {
@@ -23,32 +13,37 @@ export class LogInOutput {
   }
 }
 
-export class LogInUsecase {
-  readonly input: LogInInput;
+export class LogOutOutput {
+  readonly success: boolean;
+
+  constructor(params: { success: boolean }) {
+    this.success = params.success;
+  }
+}
+
+export class LogOutUsecase {
+  readonly input: LogOutInput;
   private sessionRepository: SessionsRepository;
 
   constructor(
-    input: LogInInput,
+    input: LogOutInput,
     sessionRepository: SessionsRepository
   ) {
     this.input = input;
     this.sessionRepository = sessionRepository;
   }
 
-  async log_in(): Promise<LogInOutput> {
+  async log_out(): Promise<LogOutOutput> {
     if (!this.validInput(this.input)) {
       return Promise.reject(new InvalidParameterError());
     }
 
     try {
-      const response = await this.sessionRepository.log_in({
-        email: this.input.email,
-        password: this.input.password
+      await this.sessionRepository.log_out({
+        token: this.input.token
       });
 
-      const token = response.token;
-      localStorage.setItem('token', token);  // ログイン時にトークンをlocalStorageに保存
-      return new LogInOutput({ token });
+      return new LogOutOutput({ success: true });
 
     } catch (error) {
       if (error instanceof UnauthorizedError) {
@@ -58,7 +53,7 @@ export class LogInUsecase {
     }
   }
 
-  private validInput(input: LogInInput): boolean {
-    return !!input.email && !!input.password;
+  private validInput(input: LogOutInput): boolean {
+    return !!input.token;
   }
 }

@@ -46,14 +46,17 @@ export class SessionsRepository {
         },
       });
       if (response.status === 200) {
-        return { token: response.data.token };
+        const token = response.data.token;
+        localStorage.setItem('token', token); // トークンをlocalStorageに保存
+        console.log('Token saved to localStorage:', token);
+        return { token };
       } else {
         console.warn('Non-200 status code:', response.status);
         return { token: "" };
       }
     } catch (error: unknown) {
-      console.error('Error in SessionsRepository sign_in:', error);
-
+      console.error('Error in SessionsRepository log_in:', error);
+  
       if (axios.isAxiosError(error)) {
         const { status } = error.response!;
         if (status === 400) {
@@ -66,10 +69,10 @@ export class SessionsRepository {
           throw new UnknownError('An unknown error occurred');
         }
       }
-
+  
       throw new FailSignUpError('Failed to sign in');
     }
-  }
+  }  
 
   async update_profile(updateProfileData: FormData): Promise<{ token: string }> {
     try {
@@ -110,4 +113,41 @@ export class SessionsRepository {
       throw new FailUpdateProfileError('Failed to update profile');
     }
   }
+
+  async log_out(query: { token: string }): Promise<void> {
+    console.log('log_out called with token:', query.token);
+    try {
+      const response = await axios.delete(API.createURL(API.URL.log_out()), {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          "Authorization": `Bearer ${query.token}`
+        },
+      });
+      if (response.status === 204) {
+        console.log('log_out successful with status 204');
+        return;
+      } else {
+        console.warn('Non-204 status code:', response.status);
+        return;
+      }
+    } catch (error: unknown) {
+      console.error('Error in SessionsRepository log_out:', error);
+  
+      if (axios.isAxiosError(error)) {
+        const { status } = error.response!;
+        if (status === 400) {
+          throw new BadRequestError('Invalid request');
+        } else if (status === 401) {
+          throw new UnauthorizedError('Unauthorized');
+        } else if (status === 404) {
+          throw new NotFoundError('Not Found');
+        } else {
+          throw new UnknownError('An unknown error occurred');
+        }
+      }
+  
+      throw new UnknownError('Failed to log out');
+    }
+  }  
 }
