@@ -49,4 +49,24 @@ export class PostsRepository {
       throw error;
     }
   }
+
+  async create(postData: { content: string; tags: string[] }): Promise<{ code: string }> {
+    try {
+      const response = await axios.post(API.createURL(API.URL.create_post()), postData, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      });
+      if (response.status === 201) {
+        return { code: response.data.code };
+      } else {
+        console.warn('Non-201 status code:', response.status);
+        return { code: "" };
+      }
+    } catch (error) {
+      console.error('Error in PostsRepository create:', error);
+      return { code: "" };
+  }
+ }
 }

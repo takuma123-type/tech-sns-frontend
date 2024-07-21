@@ -1,15 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import IconHeader from '../organism/IconHeader';
 import MobileFooter from '../organism/MobileFooter';
 import SelectDropdown from '../atoms/SelectDropdown';
 import '../../styles/Post.css';
+import { FetchTagsUsecase } from '../../usecase/FetchTagUsecase';
+import { TagsRepository } from '../../infrastructure/repository/TagRepository';
+import { TagItem } from '../../models/presentation/TagItem';
 
 export const Post = () => {
-  const options = [
-    { value: 1, label: 'Option 1' },
-    { value: 2, label: 'Option 2' },
-    { value: 3, label: 'Option 3' },
-  ];
+  const [options, setOptions] = useState<{ value: number; label: string }[]>([]);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      const tagRepository = new TagsRepository();
+      const fetchTagsUsecase = new FetchTagsUsecase(tagRepository);
+      try {
+        const output = await fetchTagsUsecase.fetch();
+        const tagOptions = output.tags.map((tag: TagItem, index: number) => ({
+          value: index,
+          label: tag.name,
+        }));
+        setOptions(tagOptions);
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+      }
+    };
+
+    fetchTags();
+  }, []);
 
   const handleSelect = (value: number) => {
     console.log(`Selected value: ${value}`);
