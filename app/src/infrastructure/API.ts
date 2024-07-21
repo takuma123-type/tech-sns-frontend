@@ -6,7 +6,7 @@ export class API {
   public static URL = {
     posts: () => `${this.BASE_PATH}/posts`,
     post: (code: string) => `${this.BASE_PATH}/posts/${code}`,
-    create_post: () => `${this.BASE_PATH}/posts/create`,
+    create_post: () => `${this.BASE_PATH}/posts`,
     tags: () => `${this.BASE_PATH}/tags`,
     sign_up: () => `${this.BASE_PATH}/sessions/sign_up`,
     log_in: () => `${this.BASE_PATH}/sessions/log_in`,

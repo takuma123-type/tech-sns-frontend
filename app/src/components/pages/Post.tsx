@@ -6,9 +6,14 @@ import '../../styles/Post.css';
 import { FetchTagsUsecase } from '../../usecase/FetchTagUsecase';
 import { TagsRepository } from '../../infrastructure/repository/TagRepository';
 import { TagItem } from '../../models/presentation/TagItem';
+import { CreatePostUsecase } from '../../usecase/CreatePostUsecase';
+import { PostsRepository } from '../../infrastructure/repository/PostsRepository';
+import { PostCreateItem } from '../../models/presentation/PostCreateItem';
 
 export const Post = () => {
   const [options, setOptions] = useState<{ value: number; label: string }[]>([]);
+  const [content, setContent] = useState('');
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -30,7 +35,34 @@ export const Post = () => {
   }, []);
 
   const handleSelect = (value: number) => {
+    setSelectedTags((prevSelectedTags) => [...prevSelectedTags, value]);
     console.log(`Selected value: ${value}`);
+  };
+
+  const getToken = () => {
+    // トークンを取得するロジックをここに追加
+    const token = localStorage.getItem('authToken'); // 例: ローカルストレージから取得する場合
+    console.log('Retrieved token:', token); // トークンをログに出力して確認
+    return token;
+  };
+
+  const handleSubmit = async () => {
+    const postRepository = new PostsRepository();
+    const createPostUsecase = new CreatePostUsecase(
+      new PostCreateItem({ content, tags: selectedTags.map(index => options[index].label) }),
+      postRepository
+    );
+    const token = getToken(); // トークンを取得
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+    try {
+      const output = await createPostUsecase.create(token); // トークンを渡す
+      console.log('Post created with code:', output.code);
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
   };
 
   return (
@@ -46,6 +78,8 @@ export const Post = () => {
               id="large-input"
               className="form-textarea"
               rows={4}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
             ></textarea>
           </div>
         </form>
@@ -61,6 +95,7 @@ export const Post = () => {
           <button
             type="button"
             className="submit-button"
+            onClick={handleSubmit}
           >
             ポスト
           </button>

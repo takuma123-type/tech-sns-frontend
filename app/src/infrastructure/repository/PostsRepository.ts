@@ -1,7 +1,6 @@
 import axios from "axios";
 import { API } from "../API";
 import { PostItem } from "../../models/presentation/PostItem";
-import { axiosClient } from "../axiosClient";
 
 export class PostsRepository {
   async fetch(): Promise<{ results: PostItem[] }> {
@@ -50,12 +49,13 @@ export class PostsRepository {
     }
   }
 
-  async create(postData: { content: string; tags: string[] }): Promise<{ code: string }> {
+  async create(postData: { content: string; tags: string[] }, token: string): Promise<{ code: string }> {
     try {
       const response = await axios.post(API.createURL(API.URL.create_post()), postData, {
         headers: {
           "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest",
+          "Authorization": `Bearer ${token}`, // トークンをヘッダーに追加
         },
       });
       if (response.status === 201) {
@@ -67,6 +67,6 @@ export class PostsRepository {
     } catch (error) {
       console.error('Error in PostsRepository create:', error);
       return { code: "" };
+    }
   }
- }
 }
