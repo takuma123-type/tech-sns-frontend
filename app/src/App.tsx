@@ -21,7 +21,7 @@ function App(): JSX.Element {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/search" element={<Search />} />
           <Route path="/post" element={<PrivateRoute element={<Post />} />} />
-          <Route path="/profile-registration" element={<PrivateRoute element={<ProfileRegistration />} />} />
+          <Route path="/profile-registration" element={<ProfileRegistration />} />
           <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
         </Routes>
       </Router>

@@ -11,7 +11,7 @@ export const useLogout = () => {
 
   const handleLogout = useCallback(async () => {
     console.log('Logout process started');
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('authToken'); // セッションストレージからトークンを取得
     if (!token) {
       console.log('No token found');
       return;
@@ -24,7 +24,7 @@ export const useLogout = () => {
       await logOutUsecase.log_out();
       console.log('Logout successful');
       logout();
-      navigate('/');
+      navigate('/log-in'); // ログインページにリダイレクト
       console.log('Navigated to login page');
     } catch (error) {
       console.error('Logout failed', error);

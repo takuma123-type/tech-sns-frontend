@@ -110,7 +110,7 @@ export default function SignUp() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <Link to="/" className="text-blue-500 font-bold">
+                      <Link to="/log-in" className="text-blue-500 font-bold">
                         ログインはこちら
                       </Link>
                     </div>

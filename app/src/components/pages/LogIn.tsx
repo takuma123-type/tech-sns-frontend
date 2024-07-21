@@ -6,13 +6,13 @@ import BackButton from "../atoms/BackButton";
 import MobileFooter from "../organism/MobileFooter";
 import { SessionsRepository } from "../../infrastructure/repository/SessionsRepository";
 import { LogInUsecase, LogInInput } from "../../usecase/LogInUsecase";
-import { useAuth } from "../../hooks/useAuth"; // インポート
+import { useAuth } from "../../hooks/useAuth";
 
 export default function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth(); // useAuthフックを使用してlogin関数を取得
+  const { login } = useAuth();
 
   const handleLogIn = async () => {
     const input = new LogInInput({ email, password });
@@ -21,9 +21,16 @@ export default function LogIn() {
 
     try {
       const output = await usecase.log_in();
-      login(); // ログイン成功時にlogin関数を呼び出して認証状態を更新
-      console.log("ログイン成功");
-      navigate("/");
+      console.log("LogInUsecase output:", output);
+      const token = output.token;
+      if (token) {
+        sessionStorage.setItem('authToken', token);
+        login(token); // トークンを引数としてlogin関数を呼び出す
+        console.log("トークンが保存されました:", token);
+        navigate("/");
+      } else {
+        console.error("トークンが取得できませんでした");
+      }
     } catch (error) {
       console.error("ログイン失敗:", error);
     }
@@ -105,7 +112,7 @@ export default function LogIn() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <Link to="/" className="text-blue-500 font-bold">
+                      <Link to="/sign-up" className="text-blue-500 font-bold">
                         新規登録はこちら
                       </Link>
                     </div>

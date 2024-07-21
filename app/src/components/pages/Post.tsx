@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import IconHeader from '../organism/IconHeader';
 import MobileFooter from '../organism/MobileFooter';
 import SelectDropdown from '../atoms/SelectDropdown';
@@ -14,6 +15,7 @@ export const Post = () => {
   const [options, setOptions] = useState<{ value: number; label: string }[]>([]);
   const [content, setContent] = useState('');
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -47,18 +49,20 @@ export const Post = () => {
   };
 
   const handleSubmit = async () => {
-    const postRepository = new PostsRepository();
-    const createPostUsecase = new CreatePostUsecase(
-      new PostCreateItem({ content, tags: selectedTags.map(index => options[index].label) }),
-      postRepository
-    );
     const token = getToken(); // トークンを取得
     if (!token) {
       console.error('No token found');
       return;
     }
+    console.log('Token found:', token); // トークンが取得できたことを確認
+    const postRepository = new PostsRepository();
+    const createPostUsecase = new CreatePostUsecase(
+      new PostCreateItem({ content, tags: selectedTags.map(index => options[index].label) }),
+      postRepository
+    );
     try {
       const output = await createPostUsecase.create(token); // トークンを渡す
+      navigate("/"); // プロフィール画面に遷移
       console.log('Post created with code:', output.code);
     } catch (error) {
       console.error('Error creating post:', error);

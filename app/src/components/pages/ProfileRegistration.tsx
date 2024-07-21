@@ -5,12 +5,14 @@ import Footer from "../organism/Footer";
 import BackButton from "../atoms/BackButton";
 import { UpdateProfileInput, UpdateProfileUsecase } from "../../usecase/UpdateProfileUsecase";
 import { SessionsRepository } from "../../infrastructure/repository/SessionsRepository";
+import { useAuth } from "../../contexts/AuthContext"; // AuthContextをインポート
 
 export default function ProfileRegistration() {
   const [name, setName] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
+  const { setAuthToken } = useAuth(); // setAuthTokenを取得
 
   const handleUpdateProfile = async () => {
     const input = new UpdateProfileInput({ name, avatar: avatarFile, description });
@@ -20,7 +22,10 @@ export default function ProfileRegistration() {
     try {
       const result = await updateProfileUsecase.update_profile();
       const token = result.token; // プロフィール更新成功時のトークンを取得
-      localStorage.setItem("authToken", token); // トークンをローカルストレージに保存
+      console.log('Retrieved token:', token); // トークンをログに出力して確認
+      sessionStorage.setItem("authToken", token); // トークンをセッションストレージに保存
+      setAuthToken(token); // コンテキストのログイン状態を更新
+      console.log('Token saved to sessionStorage:', sessionStorage.getItem("authToken")); // 保存されたトークンを確認
       alert("プロフィールの更新に成功しました！");
       navigate("/"); // プロフィール画面に遷移
     } catch (error) {

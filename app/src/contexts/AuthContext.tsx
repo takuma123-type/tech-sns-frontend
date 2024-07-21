@@ -1,45 +1,46 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 
 interface AuthContextType {
-  isAuthenticated: boolean;
-  currentUser: any; // 適切な型に変更してください
+  authToken: string | null;
+  setAuthToken: (token: string | null) => void;
   login: (token: string) => void;
   logout: () => void;
+  isAuthenticated: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('isAuthenticated') === 'true';
-  });
-  const [currentUser, setCurrentUser] = useState<any>(null); // 適切な初期値に変更してください
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [authToken, setAuthToken] = useState<string | null>(sessionStorage.getItem("authToken"));
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!authToken);
+
+  useEffect(() => {
+    setIsAuthenticated(!!authToken);
+  }, [authToken]);
 
   const login = (token: string) => {
+    setAuthToken(token);
+    sessionStorage.setItem("authToken", token);
     setIsAuthenticated(true);
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('token', token);
-    setCurrentUser({ name: 'User' }); // 適切なユーザー情報に変更してください
   };
 
   const logout = () => {
+    setAuthToken(null);
+    sessionStorage.removeItem("authToken");
     setIsAuthenticated(false);
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('token');
-    setCurrentUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, currentUser, login, logout }}>
+    <AuthContext.Provider value={{ authToken, setAuthToken, login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
