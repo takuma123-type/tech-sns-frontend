@@ -16,22 +16,13 @@ export class GetUserDetailUsecase {
     this.usersRepository = usersRepository;
   }
 
-  async get(code: string): Promise<GetUserDetailOutput> {
+  async get(): Promise<GetUserDetailOutput> {
     try {
-      const response = await this.usersRepository.get(code);
-      if (!response || !response.results || response.results.length === 0) {
+      const userDetail = await this.usersRepository.get();
+      if (!userDetail) {
         throw new Error('No user found in the response');
       }
-      const userDetail = response.results[0];
-      const user = new UserDetailItem({
-        code: userDetail.code,
-        avatar_url: userDetail.avatar_url,
-        name: userDetail.name,
-        tags: userDetail.tags,
-      });
-      return new GetUserDetailOutput({
-        user: user,
-      });
+      return new GetUserDetailOutput({ user: userDetail });
     } catch (error) {
       console.error('Error getting user:', error);
       throw error;

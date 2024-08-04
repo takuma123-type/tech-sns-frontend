@@ -16,6 +16,13 @@ const meta = {
 
 export default function Profile() {
   const logout = useLogout();
+  const [userCode, setUserCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    const code = sessionStorage.getItem('userCode');
+    console.log('Fetched userCode from sessionStorage:', code); // デバッグメッセージを追加
+    setUserCode(code);
+  }, []);
   return (
     <React.Fragment>
       <HelmetProvider>
@@ -26,7 +33,7 @@ export default function Profile() {
         <div className="profile-container">
           <div className="profile-content">
             <ul className="divide-y divide-gray-200">
-              <Link to="/og_profile_details">
+              <Link to={`/account/user`}>
                 <li className="flex items-center py-4 px-6">
                   <div className="w-10 h-10 opacity-5 bg-teal-450 rounded-full">
                     <svg
@@ -80,7 +87,7 @@ export default function Profile() {
                   </div>
                 </li>
               </Link>
-              <Link to="/update_og_profile">
+              <Link to={`/account/user/update`}>
                 <li className="flex items-center py-4 px-6">
                   <div className="w-10 h-10 opacity-5 bg-teal-450 rounded-full">
                     <svg

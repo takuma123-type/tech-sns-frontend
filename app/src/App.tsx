@@ -1,4 +1,3 @@
-// app/src/App.tsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "./components/pages/Index";
@@ -10,8 +9,10 @@ import ProfileRegistration from "./components/pages/ProfileRegistration";
 import Profile from "./components/pages/Profile";
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./components/templates/PrivateRoute";
+import UserDetail from "./components/pages/UserDetail";
+import UpdateUserDetail from "./components/pages/UpdateUserDetail";
 
-function App(): JSX.Element {
+function App() {
   return (
     <AuthProvider>
       <Router>
@@ -23,6 +24,8 @@ function App(): JSX.Element {
           <Route path="/post" element={<PrivateRoute element={<Post />} />} />
           <Route path="/profile-registration" element={<ProfileRegistration />} />
           <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
+          <Route path="/account/user" element={<PrivateRoute element={<UserDetail />} />} />
+          <Route path="/account/user/update" element={<PrivateRoute element={<UpdateUserDetail />} />} />
         </Routes>
       </Router>
     </AuthProvider>

@@ -41,7 +41,7 @@ export default function LogIn() {
       <IconHeader />
       <>
         <BackButton />
-        <div className="flex items-center justify-center sm:mt-0 sm:mb-0">
+        <div className="flex flex-col min-h-screen pt-16"> 
           <div className="w-11/12 sm:w-full mx-auto bg-white rounded-lg shadow sm:max-w-md sm:overflow-hidden sm:h-auto">
             <div className="px-4 py-8 sm:px-12">
               <div className="flex justify-center">

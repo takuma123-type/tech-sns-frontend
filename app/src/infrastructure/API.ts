@@ -1,5 +1,3 @@
-import { create } from "domain";
-
 export class API {
   private static BASE_PATH = "/api";
 
@@ -12,8 +10,10 @@ export class API {
     log_in: () => `${this.BASE_PATH}/sessions/log_in`,
     log_out: () => `${this.BASE_PATH}/sessions/log_out`,
     update_profile: () => `${this.BASE_PATH}/sessions/update_profile`,
-    user: (code: string) => `${this.BASE_PATH}/user`,
+    user: (code: string) => `${this.BASE_PATH}/users/${code}`,
+    userDetails: () => `${this.BASE_PATH}/users/details`,
   };
+
   public static createURL(url: string): string {
     return `${process.env.REACT_APP_API_BASE_URL}${url}`;
   }
